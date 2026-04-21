@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             id="Definitions_1"
+             targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <process id="invoice-approval" name="Invoice Approval" isExecutable="true">
+
+    <startEvent id="StartEvent_1" name="Invoice Submitted">
+      <outgoing>Flow_1</outgoing>
+    </startEvent>
+
+    <serviceTask id="ValidateInvoice" name="Validate Invoice"
+                 camunda:class="com.yourname.invoiceapp.delegate.ValidateInvoiceDelegate">
+      <incoming>Flow_1</incoming>
+      <outgoing>Flow_2</outgoing>
+    </serviceTask>
+
+    <exclusiveGateway id="ApprovalGateway" name="Valid Invoice?">
+      <incoming>Flow_2</incoming>
+      <outgoing>Flow_3</outgoing>
+      <outgoing>Flow_4</outgoing>
+    </exclusiveGateway>
+
+    <userTask id="ApprovementTask" name="Approve Invoice" camunda:assignee="admin">
+      <incoming>Flow_3</incoming>
+      <outgoing>Flow_5</outgoing>
+    </userTask>
+
+    <serviceTask id="ApproveInvoice" name="Approve Invoice"
+                 camunda:class="com.yourname.invoiceapp.delegate.ApproveInvoiceDelegate">
+      <incoming>Flow_5</incoming>
+      <outgoing>Flow_6</outgoing>
+    </serviceTask>
+
+    <endEvent id="EndEvent_Approved" name="Invoice Approved">
+      <incoming>Flow_6</incoming>
+    </endEvent>
+
+    <serviceTask id="RejectInvoice" name="Reject Invoice"
+                 camunda:class="com.yourname.invoiceapp.delegate.RejectInvoiceDelegate">
+      <incoming>Flow_4</incoming>
+      <outgoing>Flow_7</outgoing>
+    </serviceTask>
+
+    <endEvent id="EndEvent_Rejected" name="Invoice Rejected">
+      <incoming>Flow_7</incoming>
+    </endEvent>
+
+    <sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="ValidateInvoice"/>
+    <sequenceFlow id="Flow_2" sourceRef="ValidateInvoice" targetRef="ApprovalGateway"/>
+    <sequenceFlow id="Flow_3" name="Valid" sourceRef="ApprovalGateway" targetRef="ApprovementTask">
+      <conditionExpression xsi:type="tFormalExpression">${validated == true}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_4" name="Invalid" sourceRef="ApprovalGateway" targetRef="RejectInvoice">
+      <conditionExpression xsi:type="tFormalExpression">${validated == false}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_5" sourceRef="ApprovementTask" targetRef="ApproveInvoice"/>
+    <sequenceFlow id="Flow_6" sourceRef="ApproveInvoice" targetRef="EndEvent_Approved"/>
+    <sequenceFlow id="Flow_7" sourceRef="RejectInvoice" targetRef="EndEvent_Rejected"/>
+
+  </process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="invoice-approval">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="82" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="128" y="125" width="84" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ValidateInvoice_di" bpmnElement="ValidateInvoice">
+        <dc:Bounds x="240" y="60" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ApprovalGateway_di" bpmnElement="ApprovalGateway" isMarkerVisible="true">
+        <dc:Bounds x="395" y="75" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="377" y="132" width="86" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ApprovementTask_di" bpmnElement="ApprovementTask">
+        <dc:Bounds x="500" y="60" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ApproveInvoice_di" bpmnElement="ApproveInvoice">
+        <dc:Bounds x="660" y="60" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Approved_di" bpmnElement="EndEvent_Approved">
+        <dc:Bounds x="822" y="82" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="796" y="125" width="88" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RejectInvoice_di" bpmnElement="RejectInvoice">
+        <dc:Bounds x="500" y="200" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Rejected_di" bpmnElement="EndEvent_Rejected">
+        <dc:Bounds x="662" y="222" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="636" y="265" width="88" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="188" y="100"/>
+        <di:waypoint x="240" y="100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="340" y="100"/>
+        <di:waypoint x="395" y="100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="445" y="100"/>
+        <di:waypoint x="500" y="100"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="462" y="82" width="25" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="420" y="125"/>
+        <di:waypoint x="420" y="240"/>
+        <di:waypoint x="500" y="240"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="426" y="178" width="34" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="600" y="100"/>
+        <di:waypoint x="660" y="100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="760" y="100"/>
+        <di:waypoint x="822" y="100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="600" y="240"/>
+        <di:waypoint x="662" y="240"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

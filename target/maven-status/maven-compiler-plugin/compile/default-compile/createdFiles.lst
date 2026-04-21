@@ -1,0 +1,8 @@
+com\yourname\invoiceapp\entity\Invoice.class
+com\yourname\invoiceapp\delegate\ApproveInvoiceDelegate.class
+com\yourname\invoiceapp\delegate\RejectInvoiceDelegate.class
+com\yourname\invoiceapp\service\InvoiceService.class
+com\yourname\invoiceapp\delegate\ValidateInvoiceDelegate.class
+com\yourname\invoiceapp\InvoiceAppApplication.class
+com\yourname\invoiceapp\controller\InvoiceController.class
+com\yourname\invoiceapp\repository\InvoiceRepository.class

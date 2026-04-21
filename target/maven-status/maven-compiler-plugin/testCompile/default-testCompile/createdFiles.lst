@@ -1,0 +1,6 @@
+com\yourname\invoiceapp\delegate\RejectInvoiceDelegateTest.class
+com\yourname\invoiceapp\InvoiceAppApplicationTest.class
+com\yourname\invoiceapp\service\InvoiceServiceTest.class
+com\yourname\invoiceapp\controller\InvoiceControllerTest.class
+com\yourname\invoiceapp\delegate\ApproveInvoiceDelegateTest.class
+com\yourname\invoiceapp\delegate\ValidateInvoiceDelegateTest.class
