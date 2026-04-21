@@ -309,4 +309,4 @@ This project is for educational purposes.
 ## 👤 Author
 
 **Your Name**
-GitHub: [@yourusername](https://github.com/haveafreakyside28-alt)
+GitHub: [Ojasva Shrivastava](https://github.com/haveafreakyside28-alt)
